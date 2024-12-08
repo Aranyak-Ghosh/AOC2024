@@ -11,8 +11,5 @@ fn main() {
     let mut day: DayOne = DayOne::new();
 
     println!("Day One, Part A: {}", day.part_a());
-
-    let mut day: DayOne = DayOne::new();
-
     println!("Day One, Part B: {}", day.part_b());
 }

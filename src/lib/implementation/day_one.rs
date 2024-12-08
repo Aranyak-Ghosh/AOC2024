@@ -1,9 +1,12 @@
-use std::{
-    cmp::Reverse,
-    collections::BinaryHeap,
-};
+use std::{cmp::Reverse, collections::BinaryHeap};
 
 use crate::lib::solution::{input_lines, Answer, Solution};
+
+/*
+Using Binary heap was probably not the best idea in hindsight since you gotta
+consume it to loop over the data. BTreeMap would have been a better choice here
+possibly
+*/
 
 pub struct DayOne {
     set_a: BinaryHeap<Reverse<i64>>,
@@ -14,7 +17,9 @@ impl Solution<u128> for DayOne {
     fn part_a(&mut self) -> Answer<u128> {
         let mut sum: u128 = 0;
 
-        while let Some((a, b)) = self.set_a.pop().zip(self.set_b.pop()) {
+        let mut local_a = self.set_a.clone();
+        let mut local_b = self.set_b.clone();
+        while let Some((a, b)) = local_a.pop().zip(local_b.pop()) {
             sum += (a.0 - b.0).abs() as u128
         }
 
@@ -26,7 +31,11 @@ impl Solution<u128> for DayOne {
 
         let mut current_val = Reverse(0);
         let mut current_similarity_score = 0;
-        while let Some(a) = self.set_a.pop() {
+
+        let mut local_a = self.set_a.clone();
+        let mut local_b = self.set_b.clone();
+
+        while let Some(a) = local_a.pop() {
             if current_val == a {
                 sum += current_similarity_score;
                 continue;
@@ -35,7 +44,7 @@ impl Solution<u128> for DayOne {
 
             let mut count = 0;
 
-            while let Some(b_val) = self.set_b.peek() {
+            while let Some(b_val) = local_b.peek() {
                 if (*b_val).0 > current_val.0 {
                     break;
                 }
@@ -43,7 +52,7 @@ impl Solution<u128> for DayOne {
                 if *b_val == current_val {
                     count += 1;
                 }
-                _ = self.set_b.pop();
+                _ = local_b.pop();
             }
 
             current_similarity_score = (current_val.0 * count) as u128;
@@ -57,7 +66,6 @@ impl Solution<u128> for DayOne {
 
 impl DayOne {
     pub fn new() -> DayOne {
-
         let mut res = DayOne {
             set_a: BinaryHeap::new(),
             set_b: BinaryHeap::new(),
