@@ -1,11 +1,9 @@
 use std::{
     cmp::Reverse,
     collections::BinaryHeap,
-    fs::File,
-    io::{BufRead, BufReader},
 };
 
-use crate::lib::solution::{file_name, Answer, Solution};
+use crate::lib::solution::{input_lines, Answer, Solution};
 
 pub struct DayOne {
     set_a: BinaryHeap<Reverse<i64>>,
@@ -59,15 +57,12 @@ impl Solution<u128> for DayOne {
 
 impl DayOne {
     pub fn new() -> DayOne {
-        let file =
-            File::open(file_name("DayOne")).expect(&format!("Unable to open input file with path"));
-        let reader = BufReader::new(file);
 
         let mut res = DayOne {
             set_a: BinaryHeap::new(),
             set_b: BinaryHeap::new(),
         };
-        for line in reader.lines() {
+        for line in input_lines("DayOne") {
             let line = line.expect("Unable to read line from file");
 
             let data = line

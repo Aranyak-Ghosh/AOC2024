@@ -1,4 +1,8 @@
-use std::fmt::{Debug, Display};
+use std::{
+    fmt::{Debug, Display},
+    fs::File,
+    io::{BufRead, BufReader},
+};
 
 #[derive(PartialEq, Eq)]
 pub struct Answer<T> {
@@ -26,12 +30,18 @@ impl<T: Debug + PartialEq + Display> Display for Answer<T> {
     }
 }
 
-pub fn file_name(day: &str) -> String {
+fn file_name(day: &str) -> String {
     format!("input/{}/input.txt", day)
 }
 
-pub trait Solution<T: Debug + PartialEq> {
+pub fn input_lines(day: &str) -> std::io::Lines<BufReader<File>> {
+    let file = File::open(file_name(day)).expect(&format!("Unable to open input file with path"));
+    let reader = BufReader::new(file);
 
+    reader.lines()
+}
+
+pub trait Solution<T: Debug + PartialEq> {
     fn part_a(&mut self) -> Answer<T>;
 
     fn part_b(&mut self) -> Answer<T>;
